@@ -291,6 +291,7 @@ int pam_sm_authenticate(pam_handle_t * pamh, int flags, int argc,
 		if (tac_fd < 0) {
 			_pam_log(LOG_ERR, "connection failed srv %d: %m", srv_i);
 			active_server.addr = NULL;
+			status = PAM_IGNORE;
 			continue;
 		}
 		if (tac_authen_send(tac_fd, user, pass, tty, r_addr,
@@ -587,7 +588,8 @@ int pam_sm_acct_mgmt(pam_handle_t * pamh, int flags, int argc,
 	 than TACACS+ */
 	if (active_server.addr == NULL) {
 		_pam_log(LOG_ERR, "user not authenticated by TACACS+");
-		return PAM_AUTH_ERR;
+		//return PAM_AUTH_ERR;
+		return PAM_IGNORE;
 	}
 	if (ctrl & PAM_TAC_DEBUG)
 		syslog(LOG_DEBUG, "%s: active server is [%s]", __FUNCTION__,
